@@ -17,6 +17,7 @@ import (
 
 type Captchure struct {
 	ClientKey string 				`json:"clientKey"`
+	LanguagePool string				`json:"languagePool"`
 	Task map[string]interface{} 	`json:"task"`
 	TaskId float64					`json:"taskId"`
 	Solution map[string]interface{}	`json:"-"`
@@ -49,6 +50,10 @@ func (s *Captchure) Publish() (err error) {
 		}
 
 		return err
+	}
+
+	if s.LanguagePool == "" {
+		s.LanguagePool = "en"
 	}
 
 	body, err := json.Marshal(s)
@@ -155,6 +160,7 @@ func (s *Captchure) GetSolution() (err error) {
 
 	tempStruct := tempInterface.(map[string]interface{})
 
+	delete(tempStruct, "languagePool")
 	delete(tempStruct, "task")
 
 	body, _ = json.Marshal(tempStruct)
